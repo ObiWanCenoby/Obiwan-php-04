@@ -5,7 +5,7 @@ function add_news ()
 <form action="?page=add_news&status=ok" method="POST">
 			<strong>Название:</strong> <input type="text" name="title"> <br>
 			<strong>Автор:</strong> <input type="text" name="author"> <br>
-			<textarea rows="10" cols="45" name="content"  placeholder="текст..."></textarea>
+			<textarea rows="10" cols="45" name="text"  placeholder="текст..."></textarea>
 			<input type="submit" name="action" value="Add ANP">
 		</form>
 <?php

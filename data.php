@@ -1,42 +1,35 @@
-﻿<?php
+<?php
+
 require_once './class/class.php';
 $pass="123456";
 
-	$dir='./data_content';
-	$file=array();
-	$file=scandir($dir); // сканируем директорию в массив.
-	$file = array_slice ($file, 2); // убираем . .. это не файлы!
-	if (!empty($file)){
-			$next_file=max($file); // максимальное значение елемента массива (след. файл.).
-			$next_file = substr($next_file,0,-4); // минус 4 символа 
-			$next_file=$next_file+1;
-				}
-	else {$next_file='1';}
+function db_connect (){
+$username ='root';
+$password ='';
+$dbname='my_blog';
+$host='localhost';
 
-if (!empty($_GET['title']))
-	{	if (file_exists($dir . '/' .$_GET['title'].'.txt'))
-		{
-			unset($file);
-			$file[0]=$_GET['title'].'.txt';
-		}
-		else {unset ($_GET['page']);}
+$dsn="mysql:dbname=$dbname;host=$host";
+
+	try {
+		$dbh =new PDO ($dsn, $username, $password);
+		$dbh->exec("set names utf8");
+		return $dbh;
+	}
+	catch(PDOException $error){
+		echo 'ERROR WARNING: '. $error->getMessage();
 	}
 
-foreach ($file as $key) {
-	$data = file_get_contents($dir.'/'.$key);
-	$data= substr($key,0,-4).':=:'.$data;  // отрезаем расширение файла, и склеиваем имя файла с массивом.
-	$data=preg_replace("/(\r\n){2,}/", "<br/><br/>", $data); // добавляем бряк!
-	$text[] = explode(":=:", $data); // парсим файл в массив по разделителю.
-
 }
 
-$news=array();
-foreach ($text as $key => $value) {
-	$news[] = new Post ($value[0], $value[1], $value[2],$value[3]);
-
+function bad_id($id){
+	$dsn = db_connect();
+	$res = $dsn->query("SELECT id FROM posts WHERE id = $id"); 
+	$l_records = $res->fetch(PDO::FETCH_ASSOC);
+	if (!$l_records){
+		return "ВАХ ... нет такого ID <br /> <strong>PAGE 404 not FOUND... </strong>";
+	}
 }
 
-if (isset($_POST['action']))
-{	$content=$_POST['title'].':=:'.$_POST['author'].':=:'.$_POST['content'];
-	file_put_contents($dir.'/'.$next_file.'.txt', $content);
-}
+
+?>

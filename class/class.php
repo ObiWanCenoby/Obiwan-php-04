@@ -24,16 +24,14 @@ $select= array(
 
 
 class Post{
-	private $filename, $title, $author, $text;
-	function __construct ($filename, $title, $author, $text)
+	public $id, $title, $text, $author;
+	function __construct ($same='')
 	{
-		$this -> filename 	=$filename;
-		$this -> title  	=$title;
-		$this -> author 	=$author;
-		$this -> text 		=$text;
+		$this -> same = $same;
+
 	}
-	function Get_filename (){
-		return $this -> filename;
+	function Get_id(){
+		return $this -> id;
 	}
 
 	function Get_title(){
@@ -44,6 +42,7 @@ class Post{
 		return $this -> author;
 	}
 	function Get_text_long(){
+		$this -> text=preg_replace("/(\r\n){2,}/", "<br/><br/>", $this -> text); // добавляем бряк!
 		return $this -> text;
 	}
 	
